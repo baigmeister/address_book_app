@@ -1,4 +1,4 @@
-package com.gumtree.test.ob;
+package com.gumtree.test.ob.app;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +55,4 @@ public class AddressBookFileReaderTest extends TestUtils {
         addressBookLineList.add(buildAddressLine("Gemma", "Lane", Gender.FEMALE, 1991, 11, 20));
         return addressBookLineList;
     }
-
-
 }

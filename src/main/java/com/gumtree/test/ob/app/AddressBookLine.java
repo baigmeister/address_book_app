@@ -1,4 +1,4 @@
-package com.gumtree.test.ob;
+package com.gumtree.test.ob.app;
 
 import java.util.Calendar;
 
