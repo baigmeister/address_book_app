@@ -2,6 +2,7 @@ package com.gumtree.test.ob;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class AddressBookFileReader {
@@ -47,5 +48,29 @@ public class AddressBookFileReader {
 
     public void setFileContentProcessor(FileContentProcessor fileContentProcessor) {
         this.fileContentProcessor = fileContentProcessor;
+    }
+
+    /**
+     *  Gets the number of Males in the address book
+     * @param addressBookLineList
+     */
+    public int findNumberOfMales(List<AddressBookLine> addressBookLineList) {
+        return new Long(addressBookLineList.stream().filter(p -> p.getGender().equals(Gender.MALE)).count()).intValue();
+    }
+
+    /**
+     * Find the oldest person in the address book
+     * @param addressBookLineList
+     */
+    public String findOldestPerson(List<AddressBookLine> addressBookLineList) {
+
+        addressBookLineList.sort(new Comparator<AddressBookLine>() {
+            // TODO what if two persons of the same age - possible refactoring
+            @Override
+            public int compare(AddressBookLine o1, AddressBookLine o2) {
+                return o1.getDateOfBirth().after(o2.getDateOfBirth()) ? 1 : -1;
+            }
+        });
+        return addressBookLineList.get(0).getName();
     }
 }

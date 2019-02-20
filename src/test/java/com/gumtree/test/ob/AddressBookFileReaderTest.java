@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,4 +37,24 @@ public class AddressBookFileReaderTest extends TestUtils {
         List<AddressBookLine> addressBookLineList = addressBookFileReader.getAddressBookContents(FILE_PATH_INVALID_DATA);
         assertThat(addressBookLineList.size(), is(0));
     }
+
+    @Test
+    public void findNumberOfMalesValid() {
+        assertThat(addressBookFileReader.findNumberOfMales(getAddressBookList()), is(2));
+    }
+
+    @Test
+    public void findOldestPersonValid() {
+        assertThat(addressBookFileReader.findOldestPerson(getAddressBookList()), is("Bill Knight"));
+    }
+
+    private List<AddressBookLine> getAddressBookList() {
+        List<AddressBookLine> addressBookLineList = new ArrayList<>();
+        addressBookLineList.add(buildAddressLine("Bill", "Knight", Gender.MALE, 1977, 3, 16));
+        addressBookLineList.add(buildAddressLine("Paul", "Robinson", Gender.MALE, 1985, 1,15));
+        addressBookLineList.add(buildAddressLine("Gemma", "Lane", Gender.FEMALE, 1991, 11, 20));
+        return addressBookLineList;
+    }
+
+
 }

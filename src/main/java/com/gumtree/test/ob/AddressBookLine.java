@@ -50,4 +50,16 @@ public class AddressBookLine {
     public void setLineNumber(int count) {
         this.count = count;
     }
+
+    @Override
+    public String toString() {
+        return "AddressBookLine{" +
+                "firstName='" + firstName + '\'' +
+                ", familyName='" + familyName + '\'' +
+                '}';
+    }
+
+    public String getName() {
+        return firstName + " " + familyName;
+    }
 }

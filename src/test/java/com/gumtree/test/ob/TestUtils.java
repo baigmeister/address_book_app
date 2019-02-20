@@ -15,4 +15,19 @@ public class TestUtils {
         assertThat(dateOfBirth.get(Calendar.MONTH), is(month-1));
         assertThat(dateOfBirth.get(Calendar.DATE), is(day));
     }
+
+    protected AddressBookLine buildAddressLine(String firstName, String familyName, Gender gender, int year, int month, int day) {
+        AddressBookLine addressBookLine = new AddressBookLine();
+        addressBookLine.setGender(gender);
+        addressBookLine.setDateOfBirth(getDateOfBirth(year, month, day));
+        addressBookLine.setFirstName(firstName);
+        addressBookLine.setFamilyName(familyName);
+        return  addressBookLine;
+    }
+
+    private Calendar getDateOfBirth(int year, int month, int day) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month -1, day);
+        return cal;
+    }
 }
