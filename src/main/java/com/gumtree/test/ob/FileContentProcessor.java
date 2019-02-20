@@ -1,11 +1,12 @@
 package com.gumtree.test.ob;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileContentProcessor {
+
+    private static final String DATE_FORMAT = "dd/MM/yy" ;
 
     /**
      *  Validates firstName, familyName, gender (Male, Female), dateOfBirth and Builds AddressBookLine Objects
@@ -33,10 +34,8 @@ public class FileContentProcessor {
 
     private AddressBookLine extractNames(AddressBookLine addressBookLine, String nameString) {
         String[] names = nameString.split(" ");
-        // TODO Clarification added leniency
-        if (names.length == 1) {
-            addressBookLine.setFirstName(names[0]);
-        } else if (names.length == 2) {
+        // TODO Clarification - strict approach taken - first name and family name have to be populated
+        if (names.length == 2) {
             addressBookLine.setFirstName(names[0]);
             addressBookLine.setFamilyName(names[1]);
         } else {
@@ -69,7 +68,8 @@ public class FileContentProcessor {
         Matcher matcher = pattern.matcher(field);
         if(matcher.find() ){
             String[] dateFields = field.split("/");
-            cal.set(getInt("19" + dateFields[2]), getInt(dateFields[1]), getInt(dateFields[0]));
+            // TODO Refactor to remove hardcoding for year
+            cal.set(getInt("19" + dateFields[2]), getInt(dateFields[1])-1, getInt(dateFields[0]));
         } else {
             cal = null;
         }

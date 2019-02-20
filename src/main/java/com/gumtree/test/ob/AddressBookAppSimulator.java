@@ -10,10 +10,5 @@ public class AddressBookAppSimulator {
         AddressBookFileReader addressBookFileReader = new AddressBookFileReader();
         addressBookFileReader.setFileContentProcessor(new FileContentProcessor());
         List<AddressBookLine> addressBookLineList = addressBookFileReader.getAddressBookContents(FILE_PATH);
-
-        System.out.println("end");
-
-
-
     }
 }

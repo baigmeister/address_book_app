@@ -31,6 +31,7 @@ public class AddressBookFileReader {
         int lineCount = 0;
         while ((line = bufferedReader.readLine()) != null) {
             AddressBookLine addressBookLine = fileContentProcessor.processFileLine(line, lineCount);
+            // TODO Assumption: data is rejected when a single line is found to be invalid - debugging could be added to highlight line number of invalid data
             if (addressBookLine == null){
                 break;
             }
