@@ -58,7 +58,6 @@ public class AddressBookFileReaderTest extends TestUtils {
         assertThat(addressBookLineList.size(), is(0));
     }
 
-
     @Test
     public void findNumberOfMalesValid() {
         assertThat(addressBookFileReader.findNumberOfMales(getAddressBookList()), is(2));
