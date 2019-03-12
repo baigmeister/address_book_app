@@ -6,7 +6,6 @@ import java.util.*;
 public class AddressBookFileReader {
 
     private FileContentProcessor fileContentProcessor;
-
     /**
      * Gets Address Book contents from AddressBook file
      * @param filePath
