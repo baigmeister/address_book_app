@@ -19,19 +19,21 @@ public class AddressBookFileReaderTest extends TestUtils {
     private static final String FILE_PATH_INVALID_DATA = "/data/invalid_addressbook.txt";
     private static final String FILE_PATH_EMPTY_DATA = "/data/empty_addressbook.txt";
     private AddressBookFileReader addressBookFileReader;
+    private AddressBookFinder addressBookFinder;
 
     @Before
     public void init() {
         addressBookFileReader = new AddressBookFileReader();
         addressBookFileReader.setFileContentProcessor(new FileContentProcessor());
+        addressBookFinder = new AddressBookFinderImpl();
     }
 
     @Test
     public void testGetFileContentsValid() {
         List<AddressBookLine> addressBookLineList = addressBookFileReader.getAddressBookContents(FILE_PATH_VALID_DATA);
         assertThat(addressBookLineList.size(), is(2));
-        assertFileLine(addressBookLineList.get(0), "Bill", "McKnight", Gender.MALE,1977, 3, 16);
-        assertFileLine(addressBookLineList.get(1), "Paul", "Robinson", Gender.MALE, 1985, 1,15);
+        assertFileLine(addressBookLineList.get(0), "Bill", "McKnight", Gender.MALE,77, 3, 16);
+        assertFileLine(addressBookLineList.get(1), "Paul", "Robinson", Gender.MALE, 85, 1,15);
     }
 
     @Test
@@ -60,34 +62,34 @@ public class AddressBookFileReaderTest extends TestUtils {
 
     @Test
     public void findNumberOfMalesValid() {
-        assertThat(addressBookFileReader.findNumberOfMales(getAddressBookList()), is(2));
+        assertThat(addressBookFinder.findNumberOfMales(getAddressBookList()), is(2));
     }
 
     @Test
     public void findNumberOfMalesWithNullAddressBookList() {
-        assertThat(addressBookFileReader.findNumberOfMales(null), is(0));
+        assertThat(addressBookFinder.findNumberOfMales(null), is(0));
     }
 
     @Test
     public void findNumberOfMalesWithEmptyAddressBookList() {
         List<AddressBookLine> addressBookLineList = new ArrayList<>();
-        assertThat(addressBookFileReader.findNumberOfMales(addressBookLineList), is(0));
+        assertThat(addressBookFinder.findNumberOfMales(addressBookLineList), is(0));
     }
 
     @Test
     public void findOldestPersonValid() {
-        assertThat(addressBookFileReader.findOldestPerson(getAddressBookList()), is("Bill Knight"));
+        assertThat(addressBookFinder.findOldestPerson(getAddressBookList()), is("Bill Knight"));
     }
 
     @Test
     public void findOldestPersonWithNullAddressBookList() {
-        assertNull(addressBookFileReader.findOldestPerson(null));
+        assertNull(addressBookFinder.findOldestPerson(null));
     }
 
     @Test
     public void findOldestPersonWithEmptyAddressBookList() {
         List<AddressBookLine> addressBookLineList = new ArrayList<>();
-        assertNull(addressBookFileReader.findOldestPerson(addressBookLineList));
+        assertNull(addressBookFinder.findOldestPerson(addressBookLineList));
     }
 
     private List<AddressBookLine> getAddressBookList() {

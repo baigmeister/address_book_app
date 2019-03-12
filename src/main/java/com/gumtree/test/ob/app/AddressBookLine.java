@@ -1,13 +1,16 @@
 package com.gumtree.test.ob.app;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Optional;
 
 public class AddressBookLine {
 
     private String firstName;
     private String familyName;
     private Gender gender;
-    private Calendar dateOfBirth;
+    private LocalDate dateOfBirth;
 
     private int count;
 
@@ -35,11 +38,11 @@ public class AddressBookLine {
         this.gender = gender;
     }
 
-    public Calendar getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Calendar dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -61,5 +64,24 @@ public class AddressBookLine {
 
     public String getName() {
         return firstName + " " + familyName;
+    }
+
+    public void setProperties(Optional<String> firstName, Optional<String> familyName, Optional<Gender> gender, Optional<LocalDate> localDate) throws RecordException {
+        if (firstName.isPresent()) {
+            this.firstName = firstName.get();
+        } else {
+            throw new RecordException("FirstName is invalid");
+        }
+        this.familyName = familyName.orElse("");
+        if(gender.isPresent()) {
+            this.gender = gender.get();
+        } else {
+            throw new RecordException("Gender is invalid");
+        }
+        if(localDate.isPresent()) {
+            this.dateOfBirth = localDate.get();
+        } else {
+            throw new RecordException("DoB is invalid");
+        }
     }
 }

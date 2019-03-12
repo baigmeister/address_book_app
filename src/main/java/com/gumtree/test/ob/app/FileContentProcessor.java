@@ -1,8 +1,9 @@
 package com.gumtree.test.ob.app;
 
-import java.util.Calendar;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Optional;
 
 public class FileContentProcessor {
 
@@ -11,77 +12,63 @@ public class FileContentProcessor {
     /**
      *  Validates firstName, familyName, gender (Male, Female), dateOfBirth and Builds AddressBookLine Objects
      * @param line String - input file line
-     * @return AddressBookLine
+     * @return <Optional>AddressBookLine
      */
-    public AddressBookLine processFileLine(String line, int count) {
+    public Optional<AddressBookLine> processFileLine(String line, int count)  {
+        Optional<AddressBookLine> addressBookLineResult = Optional.empty();
         AddressBookLine addressBookLine = new AddressBookLine();
         String[] fields = line.split(", ");
         if (fields.length != 3) {
             return null;
         }
-        addressBookLine = extractNames(addressBookLine, fields[0]);
-        if (addressBookLine != null) {
-            addressBookLine = extractGender(addressBookLine, fields[1]);
+        Optional<String> firstName = extractName(fields[0], 0);
+        Optional<String> familyName = extractName(fields[0], 1);
+        Optional<Gender> gender = extractGender(fields[1]);
+        Optional<LocalDate> localDate =  extractDateOfBirth( fields[2]);
+
+        try {
+
+            addressBookLine.setProperties(firstName, familyName, gender, localDate);
+            addressBookLineResult = Optional.of(addressBookLine);
+        } catch (RecordException re) {
+            System.out.println("Error thrown on line (" + count + ") " + re );
+
         }
-        if (addressBookLine != null) {
-            addressBookLine = extractDateOfBirth(addressBookLine, fields[2]);
-        }
-        if(addressBookLine != null) {
-            addressBookLine.setLineNumber(count);
-        }
-        return  addressBookLine;
+        return  addressBookLineResult;
     }
 
-    private AddressBookLine extractNames(AddressBookLine addressBookLine, String nameString) {
+    private Optional<String> extractName(String nameString, int index) {
         String[] names = nameString.split(" ");
-        // TODO Clarification - strict approach taken - first name and family name have to be populated
+        // TODO Clarification
+        Optional<String> name = Optional.empty();
         if (names.length == 2) {
-            addressBookLine.setFirstName(names[0]);
-            addressBookLine.setFamilyName(names[1]);
-        } else {
-            addressBookLine = null;
+            name = Optional.ofNullable(names[index]);
         }
-        return addressBookLine;
+        return name;
     }
 
-    private AddressBookLine extractGender(AddressBookLine addressBookLine, String field) {
-        Gender gender = null;
+    private Optional<Gender> extractGender(String field) {
+        Optional<Gender> gender = Optional.empty();
         switch (field) {
             case "Male" :
-                gender = Gender.MALE;
+                gender = Optional.of(Gender.MALE);
                 break;
             case "Female" :
-                gender = Gender.FEMALE;
+                gender = Optional.of(Gender.FEMALE);
                 break;
         }
-        if(gender != null) {
-            addressBookLine.setGender(gender);
-        } else {
-            addressBookLine = null;
-        }
-        return addressBookLine;
+        return gender;
     }
 
-    private AddressBookLine extractDateOfBirth(AddressBookLine addressBookLine, String field) {
-        Calendar cal = Calendar.getInstance();
-        Pattern pattern = Pattern.compile("\\d\\d/\\d\\d/\\d\\d");
-        Matcher matcher = pattern.matcher(field);
-        if(matcher.find() ){
-            String[] dateFields = field.split("/");
-            // TODO Refactor to remove hardcoding for year
-            cal.set(getInt("19" + dateFields[2]), getInt(dateFields[1])-1, getInt(dateFields[0]));
-        } else {
-            cal = null;
+    private Optional<LocalDate> extractDateOfBirth(String field) {
+        Optional<LocalDate> resultLocalDate = Optional.empty();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+        try {
+            resultLocalDate = Optional.ofNullable(
+                    LocalDate.parse(field, formatter));
+        } catch (DateTimeParseException de) {
+            System.out.println("Date parsing exception: " + de.getMessage());
         }
-        if(cal != null) {
-            addressBookLine.setDateOfBirth(cal);
-        } else {
-            addressBookLine = null;
-        }
-        return addressBookLine;
-    }
-
-    private int getInt(String dateField) {
-        return Integer.parseInt(dateField);
+        return resultLocalDate;
     }
 }

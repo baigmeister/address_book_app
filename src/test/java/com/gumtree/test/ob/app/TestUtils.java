@@ -1,19 +1,21 @@
 package com.gumtree.test.ob.app;
 
-import java.util.Calendar;
-
+import com.sun.org.apache.xalan.internal.xsltc.util.IntegerArray;
+import org.junit.Test;
+import java.time.LocalDate;
+import java.util.Optional;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestUtils {
 
     protected void assertFileLine(AddressBookLine addressBookLine, String firstName, String familyName, Gender gender, int year, int month, int day) {
-        Calendar dateOfBirth = addressBookLine.getDateOfBirth();
+        LocalDate dateOfBirth = addressBookLine.getDateOfBirth();
         assertThat(addressBookLine.getFirstName(), is(firstName));
         assertThat(addressBookLine.getFamilyName(), is(familyName));
-        assertThat(dateOfBirth.get(Calendar.YEAR), is(year) );
-        assertThat(dateOfBirth.get(Calendar.MONTH), is(month-1));
-        assertThat(dateOfBirth.get(Calendar.DATE), is(day));
+        assertThat(String.valueOf(dateOfBirth.getYear()).substring(2,4), is(String.valueOf(year)) );
+        assertThat(dateOfBirth.getMonth().getValue(), is(month));
+        assertThat(dateOfBirth.getDayOfMonth(), is(day));
     }
 
     protected AddressBookLine buildAddressLine(String firstName, String familyName, Gender gender, int year, int month, int day) {
@@ -25,9 +27,34 @@ public class TestUtils {
         return  addressBookLine;
     }
 
-    private Calendar getDateOfBirth(int year, int month, int day) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(year, month -1, day);
-        return cal;
+    private LocalDate getDateOfBirth(int year, int month, int day) {
+        LocalDate localDate = LocalDate.of(year, month, day);
+        return localDate;
     }
+
+    // Misc
+    @Test
+    public void testOptional() {
+        Optional<String> test = Optional.empty();
+        String hello = "hello";
+        test = Optional.ofNullable(hello);
+        System.out.println(test.get());
+    }
+    @Test
+    public void testInt(){
+
+        int result = 33%40;
+        System.out.println("" +result);
+    }
+    @Test
+    public void rangeTest() {
+        int[] range = new int[]{1,3,4,5};
+        int s = 4;
+        int t = 1;
+
+
+    }
+
 }
+
+

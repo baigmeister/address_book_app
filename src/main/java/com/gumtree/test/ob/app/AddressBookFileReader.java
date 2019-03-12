@@ -33,54 +33,20 @@ public class AddressBookFileReader {
             String line = "";
             int lineCount = 0;
             while ((line = bufferedReader.readLine()) != null) {
-                AddressBookLine addressBookLine = fileContentProcessor.processFileLine(line, lineCount);
+                Optional<AddressBookLine> addressBookLine = fileContentProcessor.processFileLine(line, lineCount);
                 // TODO Assumption: data is rejected when a single line is found to be invalid - debugging could be added to highlight line number of invalid data
-                if (addressBookLine == null){
+                if (addressBookLine.isPresent()) {
+                    addressBookLines.add(addressBookLine.get());
+                } else {
                     break;
                 }
-                addressBookLines.add(addressBookLine);
                 lineCount++;
             }
-
         }
         return addressBookLines;
     }
 
-    public FileContentProcessor getFileContentProcessor() {
-        return fileContentProcessor;
-    }
-
     public void setFileContentProcessor(FileContentProcessor fileContentProcessor) {
         this.fileContentProcessor = fileContentProcessor;
-    }
-
-    /**
-     *  Gets the number of Males in the address book
-     * @param addressBookLineList
-     */
-    public int findNumberOfMales(List<AddressBookLine> addressBookLineList) {
-        int count = 0;
-        if (addressBookLineList != null && !addressBookLineList.isEmpty() ) {
-            count = new Long(addressBookLineList.stream().filter(p -> p.getGender().equals(Gender.MALE)).count()).intValue();
-        }
-        return count;
-    }
-
-    /**
-     * Find the oldest person in the address book
-     * @param addressBookLineList
-     */
-    public String findOldestPerson(List<AddressBookLine> addressBookLineList) {
-        if(addressBookLineList != null && !addressBookLineList.isEmpty()) {
-            addressBookLineList.sort(new Comparator<AddressBookLine>() {
-                // TODO what if two persons of the same age - possible refactoring
-                @Override
-                public int compare(AddressBookLine o1, AddressBookLine o2) {
-                    return o1.getDateOfBirth().after(o2.getDateOfBirth()) ? 1 : -1;
-                }
-            });
-            return addressBookLineList.get(0).getName();
-        }
-        return null;
     }
 }

@@ -1,13 +1,14 @@
 package com.gumtree.test.ob.app;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import java.util.Optional;
+
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
 public class FileProcessorTest extends TestUtils {
@@ -20,35 +21,33 @@ public class FileProcessorTest extends TestUtils {
     }
 
     @Test
-    public void processFileLineValid() {
-        AddressBookLine addressBookLine = fileContentProcessor.processFileLine("Bill McKnight, Male, 16/03/77", 0);
-        assertNotNull(addressBookLine);
-        assertFileLine(addressBookLine, "Bill","McKnight"  ,Gender.MALE, 1977,3,16 );
+    public void processFileLineValid() throws RecordException {
+        Optional<AddressBookLine> addressBookLine = fileContentProcessor.processFileLine("Bill McKnight, Male, 16/03/77", 0);
+        assertTrue(addressBookLine.isPresent());
+        assertFileLine(addressBookLine.get(), "Bill","McKnight"  ,Gender.MALE, 77,3,16 );
     }
 
     @Test
-    public void processFileLineInvalidGender() {
-        AddressBookLine addressBookLine = fileContentProcessor.processFileLine("Bill McKnight, Invalid, 16/03/77", 0);
-        assertNull(addressBookLine);
+    public void processFileLineInvalidGender() throws RecordException{
+        Optional<AddressBookLine> addressBookLine = fileContentProcessor.processFileLine("Bill McKnight, Invalid, 16/03/77", 0);
+        assertFalse(addressBookLine.isPresent());
     }
 
     @Test
     public void processFileLineInvalidName() {
-        AddressBookLine addressBookLine = fileContentProcessor.processFileLine("1, Male, 16/03/77", 0);
-        assertNull(addressBookLine);
+        Optional<AddressBookLine> addressBookLine = fileContentProcessor.processFileLine("1, Male, 16/03/77", 0);
+        assertFalse(addressBookLine.isPresent());
     }
 
     @Test
     public void processFileLineInvalidDateOfBirthFormat(){
-        AddressBookLine addressBookLine = fileContentProcessor.processFileLine("Bill McKnight, Male, 16-03-77", 0);
-        assertNull(addressBookLine);
+        Optional<AddressBookLine> addressBookLine = fileContentProcessor.processFileLine("Bill McKnight, Male, 16-03-77", 0);
+        assertFalse(addressBookLine.isPresent());
     }
 
-    @Ignore
     @Test
-    // TODO Refactor Date of Birth Functionality - invalid date of birth is accepted
     public void processFileLineInvalidDateOfBirth(){
-        AddressBookLine addressBookLine = fileContentProcessor.processFileLine("Bill McKnight, Male, 78/03/77", 0);
-        assertNull(addressBookLine);
+        Optional<AddressBookLine> addressBookLine = fileContentProcessor.processFileLine("Bill McKnight, Male, 78/03/77", 0);
+        assertFalse(addressBookLine.isPresent());
     }
 }
